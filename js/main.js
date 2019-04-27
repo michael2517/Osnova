@@ -24,6 +24,11 @@ let startBtn = document.getElementById("start"),
 let money, time;
 
 
+expensesBtn.disabled = true;
+optionalExpensesBtn.disabled = true;
+countBtn.disabled = true;
+
+
 startBtn.addEventListener('click', function () {
 
     time = prompt("Введите дату в формате YYYY-MM-DD", '');
@@ -38,10 +43,14 @@ startBtn.addEventListener('click', function () {
     yearValue.value = new Date(Date.parse(time)).getFullYear();
     monthValue.value = new Date(Date.parse(time)).getMonth() + 1;
     dayValue.value = new Date(Date.parse(time)).getDay();
+    expensesBtn.disabled = false;
+    optionalExpensesBtn.disabled = false;
+    countBtn.disabled = false;
 });
 
+
 expensesBtn.addEventListener('click', function () {
-    let sum = 0;
+       let sum = 0;
     for(let i = 0; i < expensesItem.length; i++) {
         let a = expensesItem[i].value;
         let b = expensesItem[++i].value;
@@ -52,14 +61,13 @@ expensesBtn.addEventListener('click', function () {
             && a != ''
             && b != ''
             && a.length < 10) {
-            console.log("Done!");
             appData.expenses[a] = b;
             sum += +b;
         } else {
             i = i - 1;
         }
     }
-    expensesValue.textContent = sum
+    expensesValue.textContent = sum;
 });
 
 optionalExpensesBtn.addEventListener('click', function () {
@@ -71,7 +79,6 @@ optionalExpensesBtn.addEventListener('click', function () {
             && (typeof(a)) != null
             && a != ''
             && a.length < 10) {
-            console.log("Done!");
             appData.optionalExpenses[x] = a;
             optionalExpensesValue.textContent += appData.optionalExpenses[x] + ' ';
         } else {
@@ -80,10 +87,16 @@ optionalExpensesBtn.addEventListener('click', function () {
     }
 });
 
+
+
 countBtn.addEventListener('click', function () {
 
+
     if(appData.budget != undefined) {
-        appData.moneyPerDay = (appData.budget/30).toFixed();
+        let xb = expensesValue.innerHTML;
+        xb = Number.parseInt(xb);
+
+        appData.moneyPerDay = ((appData.budget-xb)/30).toFixed();
         dayBudgetValue.textContent = appData.moneyPerDay;
 
         if(appData.moneyPerDay < 100) {
